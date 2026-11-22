@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import json
-import subprocess
 from pathlib import Path
 from typing import Any, TypedDict
+
+from pyswip import Prolog
 
 
 ComponentId = str
@@ -49,25 +49,12 @@ class PSURecommendation(TypedDict):
     required_psu_w: int
 
 
-class PrologError(RuntimeError):
-    """Raised when a Prolog query fails."""
-
-
 class PrologService:
-    """Calls Prolog for catalog and build checks."""
+    """Python wrapper for queries to the Prolog knowledge base."""
 
-    # Set the knowledge-base path and SWI-Prolog options.
-    def __init__(
-        self,
-        knowledge_base: str | Path | None = None,
-        executable: str = "swipl",
-        timeout_seconds: float = 10,
-    ) -> None:
-        self.knowledge_base = Path(
-            knowledge_base or Path(__file__).with_name("knowledge_base.pl")
-        )
-        self.executable = executable
-        self.timeout_seconds = timeout_seconds
+    # Set up the PySwip connection and load the knowledge base.
+    def __init__(self, knowledge_base: str | Path | None = None) -> None:
+        raise NotImplementedError
 
     # Get every part, or just the ones in a category.
     def list_components(self, category: str | None = None) -> list[Component]:
@@ -97,8 +84,8 @@ class PrologService:
     ) -> PSURecommendation | None:
         raise NotImplementedError
 
-    # Run a query and read its JSON output.
-    def _run_json_goal(self, goal: str) -> Any:
+    # Run a query and return its variable bindings.
+    def _query(self, goal: str) -> list[dict[str, Any]]:
         raise NotImplementedError
 
     # Check an ID before putting it in a Prolog query.
@@ -108,5 +95,5 @@ class PrologService:
 
     # Turn a Prolog result into a Python dictionary.
     @staticmethod
-    def _decode_result(term: str) -> dict[str, Any]:
+    def _decode_result(term: Any) -> dict[str, Any]:
         raise NotImplementedError
