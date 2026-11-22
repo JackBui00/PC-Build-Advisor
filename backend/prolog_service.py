@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from pyswip import Prolog
+from pyswip.prolog import PrologError as PySwipError
 
 
 ComponentId = str
@@ -49,12 +50,30 @@ class PSURecommendation(TypedDict):
     required_psu_w: int
 
 
+class PrologConnectionError(RuntimeError):
+    """Raised when PySwip cannot load the knowledge base."""
+
+
 class PrologService:
     """Python wrapper for queries to the Prolog knowledge base."""
 
     # Set up the PySwip connection and load the knowledge base.
     def __init__(self, knowledge_base: str | Path | None = None) -> None:
-        raise NotImplementedError
+        self.knowledge_base = Path(
+            knowledge_base or Path(__file__).with_name("knowledge_base.pl")
+        ).resolve()
+        if not self.knowledge_base.is_file():
+            raise FileNotFoundError(
+                f"Prolog knowledge base not found: {self.knowledge_base}"
+            )
+
+        self.prolog = Prolog
+        try:
+            self.prolog.consult(str(self.knowledge_base))
+        except (PySwipError, OSError) as exc:
+            raise PrologConnectionError(
+                f"Could not connect to SWI-Prolog or load the knowledge base: {exc}"
+            ) from exc
 
     # Get every part, or just the ones in a category.
     def list_components(self, category: str | None = None) -> list[Component]:
