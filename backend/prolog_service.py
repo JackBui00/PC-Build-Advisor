@@ -191,7 +191,10 @@ class PrologService:
     # Turn a Prolog result into a Python dictionary.
     @staticmethod
     def _decode_result(term: Any) -> dict[str, Any]:
-        term = str(term)
+        if isinstance(term, bytes):
+            term = term.decode("utf-8")
+        else:
+            term = str(term)
         wattage = re.fullmatch(r"(sufficient|insufficient)\((\d+)\)", term)
         if wattage:
             return {
