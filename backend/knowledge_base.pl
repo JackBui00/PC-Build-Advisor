@@ -7,6 +7,36 @@
 
 :- encoding(utf8).
 
+% These catalog facts are grouped by component, so predicate clauses recur
+% across the file. Mark those predicates as intentionally discontiguous.
+:- discontiguous case_cooler_clearance_mm/2.
+:- discontiguous case_form_factor_support/2.
+:- discontiguous case_gpu_clearance_mm/2.
+:- discontiguous case_radiator_support/3.
+:- discontiguous case_radiator_support_known/1.
+:- discontiguous component/4.
+:- discontiguous cooler_height_mm/2.
+:- discontiguous cooler_radiator_dimensions_mm/4.
+:- discontiguous cooler_radiator_size_mm/2.
+:- discontiguous cooler_socket_support/2.
+:- discontiguous cooler_type/2.
+:- discontiguous cpu_series/2.
+:- discontiguous cpu_socket/2.
+:- discontiguous cpu_tdp/2.
+:- discontiguous gpu_dimensions_mm/4.
+:- discontiguous gpu_power_connector/2.
+:- discontiguous gpu_power_connector_count/3.
+:- discontiguous gpu_power_for_estimate/2.
+:- discontiguous memory_profile/2.
+:- discontiguous memory_timing_cl/2.
+:- discontiguous motherboard_form_factor/2.
+:- discontiguous motherboard_max_memory_gb/2.
+:- discontiguous motherboard_memory/2.
+:- discontiguous motherboard_socket/2.
+:- discontiguous motherboard_supported_cpu_series/2.
+:- discontiguous psu_form_factor/2.
+:- discontiguous psu_length_mm/2.
+
 % component(Id, Category, DisplayName, Manufacturer)
 component(ryzen_5_7600, cpu, 'AMD Ryzen 5 7600', amd).
 component(ryzen_5_5600, cpu, 'AMD Ryzen 5 5600', amd).
